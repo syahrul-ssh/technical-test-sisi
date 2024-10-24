@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bukti Potong Pajak</title>
+</head>
+<body>
+  <h1>Bukti Potong Pajak Pembelian Barang</h1>
+  <form id="uploadForm">
+    <input type="file" id="pdfFile" name="file" accept="application/pdf" required>
+    <button type="submit">Upload</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.getElementById('pdfFile');
+      formData.append('file', fileInput.files[0]);
+
+      const response = await fetch('http://localhost:3000/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      if (result.success === true) {
+        document.getElementById('message').innerHTML = `
+          <p>File berhasil diunggah. <a href="http://localhost:3000/download/output.pdf" download>Klik untuk unduh</a></p>
+        `;
+      } else {
+        document.getElementById('message').innerText = 'Gagal mengunggah file.';
+      }
+    });
+  </script>
+</body>
+</html>
